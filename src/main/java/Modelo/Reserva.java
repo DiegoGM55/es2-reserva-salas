@@ -4,76 +4,80 @@
  */
 package Modelo;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.Duration;
+import java.time.LocalTime;
 
 public class Reserva {
-
     private int id;
-    private EspacoFisico espaco;
+    private ZonedDateTime dataReservaInicio;
+    private ZonedDateTime dataReservaFim;
     private Usuario usuario;
-    private ZonedDateTime dataInicioReserva;
-    private ZonedDateTime dataFimReserva;
-    private LocalTime horaInicio;
+    private EspacoFisico espacoFisico;
+    private LocalTime horarioInicio;
     private Duration duracao;
-    private int status;
+    private int status; // 0 = Pendente, 1 = Aprovada, 2 = Recusada
 
-    public Reserva(int id, EspacoFisico espaco, Usuario usuario, ZonedDateTime dataInicioReserva, ZonedDateTime dataFimReserva, int status) {
+    // Construtor
+    public Reserva(int id, ZonedDateTime dataReservaInicio, Usuario usuario, EspacoFisico espacoFisico, LocalTime horarioInicio, Duration duracao, int status) {
         this.id = id;
-        this.espaco = espaco;
+        this.dataReservaInicio = dataReservaInicio;
+        //this.dataReservaFim = data
         this.usuario = usuario;
-        this.dataInicioReserva = dataInicioReserva;
-        this.dataFimReserva = dataFimReserva;
+        this.espacoFisico = espacoFisico;
+        this.horarioInicio = horarioInicio;
+        this.duracao = duracao;
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Reserva{"
-                + "id=" + id
-                + ",\nespaco=" + (espaco != null ? espaco.getNome() : "N/A")
-                + ",\nusuario=" + (usuario != null ? usuario.getNome() : "N/A")
-                + ",\ndataInicioReserva=" + dataInicioReserva
-                + ",\ndataFimReserva=" + dataFimReserva
-                + ",\nhoraInicio=" + (horaInicio != null ? horaInicio : "N/A")
-                + ",\nduracao=" + (duracao != null ? duracao.toHours() + " horas" : "N/A")
-                + ",\nstatus=" + status
-                + '}';
+    public ZonedDateTime getDataReservaInicio() {
+        return dataReservaInicio;
     }
 
-    
-    public int getEspacoId(){
-        return this.espaco.getId();
+    public void setDataReservaInicio(ZonedDateTime dataReservaInicio) {
+        this.dataReservaInicio = dataReservaInicio;
+    }
+
+    // Getters e Setters
+    public ZonedDateTime getDataReservaFim() {
+        return dataReservaFim;
+    }
+
+    public void setDataReservaFim(ZonedDateTime dataReservaFim) {
+        this.dataReservaFim = dataReservaFim;
     }
     
-    public int getUsuarioId(){
-        return this.usuario.getId();
-    }
-    
-    public ZonedDateTime getDataInicioReserva() {
-        return dataInicioReserva;
+    public int getId() {
+        return id;
     }
 
-    public void setDataInicioReserva(ZonedDateTime dataInicioReserva) {
-        this.dataInicioReserva = dataInicioReserva;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public ZonedDateTime getDataFimReserva() {
-        return dataFimReserva;
+
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setDataFimReserva(ZonedDateTime dataFimReserva) {
-        this.dataFimReserva = dataFimReserva;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
-    public LocalTime getHoraInicio() {
-        return horaInicio;
+    public EspacoFisico getEspacoFisico() {
+        return espacoFisico;
     }
 
-    public void setHoraInicio(LocalTime horaInicio) {
-        this.horaInicio = horaInicio;
+    public void setEspacoFisico(EspacoFisico espacoFisico) {
+        this.espacoFisico = espacoFisico;
+    }
+
+    public LocalTime getHorarioInicio() {
+        return horarioInicio;
+    }
+
+    public void setHorarioInicio(LocalTime horarioInicio) {
+        this.horarioInicio = horarioInicio;
     }
 
     public Duration getDuracao() {
@@ -84,30 +88,6 @@ public class Reserva {
         this.duracao = duracao;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public EspacoFisico getEspaco() {
-        return espaco;
-    }
-
-    public void setEspaco(EspacoFisico espaco) {
-        this.espaco = espaco;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -115,5 +95,4 @@ public class Reserva {
     public void setStatus(int status) {
         this.status = status;
     }
-
 }

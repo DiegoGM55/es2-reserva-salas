@@ -10,13 +10,17 @@ public class EspacoFisico {
     private String endereco;
     private int capacidadeMaxima;
     private String observacao;
-    
-    public EspacoFisico(int id, String nome ,String endereco){
+
+    // Construtor
+    public EspacoFisico(int id, String nome, String endereco, int capacidadeMaxima, String observacao) {
         this.id = id;
         this.nome = nome;
         this.endereco = endereco;
+        this.capacidadeMaxima = capacidadeMaxima;
+        this.observacao = observacao;
     }
 
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -32,13 +36,7 @@ public class EspacoFisico {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
-    public String imprimirEspacosFisicos(){
-        String relatorio =  "\nNome Local: " + this.nome ;
-        
-        return relatorio;
-    }
-    
+
     public String getEndereco() {
         return endereco;
     }
@@ -62,5 +60,4 @@ public class EspacoFisico {
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
-    
 }

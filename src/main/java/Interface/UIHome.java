@@ -4,23 +4,32 @@
  */
 package Interface;
 
-import Controlador.Controlador;
+import Controlador.AdministradorController;
+import Controlador.EspacoFisicoController;
+import Controlador.ReservaController;
+import Controlador.UsuarioController;
+import Modelo.EspacoFisico;
+import Modelo.Usuario;
 import java.time.Duration;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-/**
- *
- * @author Gaspar
- */
 public class UIHome extends javax.swing.JFrame {
 
-    Controlador controller = new Controlador();
+    private AdministradorController admController;
+    private UsuarioController userController;
+    private EspacoFisicoController espacoController;
+    private ReservaController reservaController;
 
     /**
      * Creates new form UIHome
      */
-    public UIHome() {
+    public UIHome(AdministradorController admController, UsuarioController userController, EspacoFisicoController espacoController, ReservaController reservaController) {
+        this.admController = admController;
+        this.userController = userController;
+        this.espacoController = espacoController;
+        this.reservaController = reservaController;
         initComponents();
     }
 
@@ -38,6 +47,7 @@ public class UIHome extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         inputSenha = new javax.swing.JTextField();
         bttnEntrar = new javax.swing.JButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,6 +68,13 @@ public class UIHome extends javax.swing.JFrame {
             }
         });
 
+        jRadioButton1.setText("Administrador");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -65,6 +82,7 @@ public class UIHome extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jRadioButton1)
                     .addComponent(bttnEntrar)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,9 +105,11 @@ public class UIHome extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButton1)
+                .addGap(13, 13, 13)
                 .addComponent(bttnEntrar)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
 
         pack();
@@ -100,68 +120,56 @@ public class UIHome extends javax.swing.JFrame {
     }//GEN-LAST:event_inputEmailActionPerformed
 
     private void bttnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnEntrarActionPerformed
-        // Inicializa o controlador
-        controller.addUsuario("user1", "user1", "user1", "user1", "user1", "user1", 0); // TIPO 0 -> ADM
-        controller.addEspacoFisico(0, "teste", "teste");
-        
-        ZonedDateTime dataInicio = ZonedDateTime.of(2024, 12, 15, 14, 0, 0, 0, ZoneId.systemDefault()); // 10 de Dezembro de 2024, às 14:00
-
-        controller.addReserva(0, dataInicio, Duration.ZERO);
         // Tenta autenticar o usuário
-        int tipoAutenticado = controller.autenticarUsuario(inputEmail.getText(), inputSenha.getText());
-        System.out.println("Tipo Usuario Autenticado:" + tipoAutenticado);
-        // Verifica se a autenticação falhou
-        if (tipoAutenticado == -1) {
-            // Exibe alerta para o usuário
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "Email ou senha estão incorretos. Por favor, tente novamente.",
-                    "Erro de autenticação",
-                    javax.swing.JOptionPane.ERROR_MESSAGE
-            );
-        } else {
-            System.out.println("Entrou aqui" + tipoAutenticado);
-            if (tipoAutenticado == 0) {
-                Teste proximoFrame = new Teste(); // Substitua pelo nome real do JFrame
-                proximoFrame.setVisible(true);
+        boolean isAdmin = jRadioButton1.isSelected();
+
+        if (isAdmin) {
+            if (admController.login(inputEmail.getText(), inputSenha.getText())) {
+                System.out.println("## Login admnistrador ");
+                UIHomeAdmin adminInterface = new UIHomeAdmin(admController, userController, espacoController, reservaController);
+                adminInterface.setVisible(true);
                 this.dispose(); // Fecha a tela de login
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Email ou senha estão incorretos. Por favor, tente novamente.",
+                        "Erro de autenticação",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+
+        } else {
+            if (userController.login(inputEmail.getText(), inputSenha.getText())) {
+                System.out.println("## Login usuario ");
+                UIHomeUser userInterface = new UIHomeUser(admController, userController, espacoController, reservaController);
+                userInterface.setVisible(true);
+                this.dispose(); // Fecha a tela de login
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Email ou senha estão incorretos. Por favor, tente novamente.",
+                        "Erro de autenticação",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                );
             }
         }
     }//GEN-LAST:event_bttnEntrarActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UIHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UIHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UIHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UIHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+        AdministradorController admController = new AdministradorController();
+        UsuarioController userController = new UsuarioController();
+        EspacoFisicoController espacoController = new EspacoFisicoController();
+        ReservaController reservaController = new ReservaController();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UIHome().setVisible(true);
-            }
-        });
+        // Inicializando com os controladores
+        java.awt.EventQueue.invokeLater(() -> new UIHome(admController, userController, espacoController, reservaController).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -170,5 +178,6 @@ public class UIHome extends javax.swing.JFrame {
     private javax.swing.JTextField inputSenha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JRadioButton jRadioButton1;
     // End of variables declaration//GEN-END:variables
 }

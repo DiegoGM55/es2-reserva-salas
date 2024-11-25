@@ -12,10 +12,9 @@ public class Usuario {
     private String cpf;
     private String ra;
     private String senha;
-    private int tipoUsuario;
-    
-    // Construtor com parâmetros
-    public Usuario(int id,String nome, String telefone, String email, String cpf, String ra, String senha, int tipoUsuario) {
+
+    // Construtor
+    public Usuario(int id, String nome, String telefone, String email, String cpf, String ra, String senha) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
@@ -23,19 +22,15 @@ public class Usuario {
         this.cpf = cpf;
         this.ra = ra;
         this.senha = senha;
-        this.tipoUsuario = tipoUsuario;
     }
 
+    // Getters e Setters
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-    
-    public boolean autenticar(String email,String senha){
-        return this.email.equals(email) && this.senha.equals(senha);
     }
 
     public String getNome() {
@@ -85,13 +80,4 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-    public int getTipoUsuario() {
-        return tipoUsuario;
-    }
-
-    public void setTipoUsuario(int tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
-    }
-    
 }
