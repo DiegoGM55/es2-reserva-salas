@@ -59,6 +59,10 @@ public class UIHomeUser extends javax.swing.JFrame {
         jButtonNovaReserva.setText("Criar Nova Reserva");
         jButtonNovaReserva.addActionListener(evt -> abrirTelaCriarReserva());
 
+        JButton jButtonProximasReservas = new javax.swing.JButton(); // Criação do novo botão
+        jButtonProximasReservas.setText("Próximas Reservas"); // Configuração do novo botão
+        jButtonProximasReservas.addActionListener(evt -> abrirCalendarioReservas());
+
         jLabelPendentes.setText("Reservas Aguardando Aprovação");
         jLabelAprovadas.setText("Reservas Aprovadas");
         jLabelRecusadas.setText("Reservas Recusadas");
@@ -99,13 +103,17 @@ public class UIHomeUser extends javax.swing.JFrame {
                                         .addComponent(jLabelRecusadas)
                                         .addComponent(jScrollPaneRecusadas, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jButtonNovaReserva))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonProximasReservas)
                                 .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jButtonNovaReserva)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButtonNovaReserva)
+                                        .addComponent(jButtonProximasReservas)) // Incluindo o novo botão no layout vertical
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabelPendentes)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -125,7 +133,7 @@ public class UIHomeUser extends javax.swing.JFrame {
     }
 
     private void carregarReservasPendentes() {
-        int usuarioId = userController.getUsuarioLogado().getId(); 
+        int usuarioId = userController.getUsuarioLogado().getId();
         ArrayList<Reserva> reservasPendentes = reservaController.getReservasPendentesPorUsuario(usuarioId);
         DefaultTableModel modelo = (DefaultTableModel) jTablePendentes.getModel();
         modelo.setRowCount(0);
@@ -146,11 +154,12 @@ public class UIHomeUser extends javax.swing.JFrame {
         // Fecha a tela atual
         this.dispose();
         // Abre a tela de login (UIHome)
-        new UIHome(admController,userController,espacoController,reservaController).setVisible(true);
+        new UIHome(admController, userController, espacoController, reservaController).setVisible(true);
     }
 
     private void carregarReservasAprovadas() {
-        int usuarioId = userController.getUsuarioLogado().getId();        ArrayList<Reserva> reservasAprovadas = reservaController.getReservasAprovadasPorUsuario(usuarioId);
+        int usuarioId = userController.getUsuarioLogado().getId();
+        ArrayList<Reserva> reservasAprovadas = reservaController.getReservasAprovadasPorUsuario(usuarioId);
         DefaultTableModel modelo = (DefaultTableModel) jTableAprovadas.getModel();
         modelo.setRowCount(0);
 
@@ -167,7 +176,7 @@ public class UIHomeUser extends javax.swing.JFrame {
     }
 
     private void carregarReservasRecusadas() {
-        int usuarioId = userController.getUsuarioLogado().getId();        
+        int usuarioId = userController.getUsuarioLogado().getId();
         ArrayList<Reserva> reservasRecusadas = reservaController.getReservasRecusadasPorUsuario(usuarioId);
         DefaultTableModel modelo = (DefaultTableModel) jTableRecusadas.getModel();
         modelo.setRowCount(0);
@@ -183,6 +192,12 @@ public class UIHomeUser extends javax.swing.JFrame {
     private void abrirTelaCriarReserva() {
         UICriarReserva novaTela = new UICriarReserva(reservaController, espacoController, userController, this::carregarReservasPendentes);
         novaTela.setVisible(true);
+    }
+
+    // Método para abrir a nova interface
+    private void abrirCalendarioReservas() {
+        UICalendarioReservas calendarioReservas = new UICalendarioReservas(reservaController, userController);
+        calendarioReservas.setVisible(true);
     }
 
     public static void main(String args[]) {

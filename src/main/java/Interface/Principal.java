@@ -9,12 +9,13 @@ import Controlador.ReservaController;
 import Controlador.UsuarioController;
 import java.awt.Color;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalTime;
 
 public class Principal {
         public static void main(String[] args) throws IOException {
             
         AdministradorController admController = new AdministradorController();
-        admController.registrarAdmin("adm", "adm", "adm", "adm", "adm");
         UsuarioController userController = new UsuarioController();
         EspacoFisicoController espacoController = new EspacoFisicoController();
         ReservaController reservaController = new ReservaController();
@@ -24,6 +25,8 @@ public class Principal {
         home.toFront();
         home.setResizable(false);
         home.getContentPane().setBackground(Color.white);
-        home.setLocationRelativeTo(null);   
+        home.setLocationRelativeTo(null);
+        admController.registrarAdmin("adm", "adm", "adm", "adm", "adm");
+   
     }
 }

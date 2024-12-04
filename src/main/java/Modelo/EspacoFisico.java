@@ -4,7 +4,11 @@
  */
 package Modelo;
 
-public class EspacoFisico {
+import java.io.Serializable;
+
+public class EspacoFisico implements Serializable {
+    private static final long serialVersionUID = 1L; // Controle de versão para serialização
+
     private int id;
     private String nome;
     private String endereco;

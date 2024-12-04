@@ -84,7 +84,7 @@ public class UICriarUsuario extends JFrame {
             }
             // Salvar usuário
             try {
-                usuarioController.registrarUsuario(nome, telefone, email, cpf, ra, senha);
+                usuarioController.registrarUsuario(nome, telefone, email, ra, cpf, senha);
 
                 JOptionPane.showMessageDialog(
                         this,

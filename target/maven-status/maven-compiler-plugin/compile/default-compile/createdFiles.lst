@@ -25,7 +25,10 @@ Interface\UIHome.class
 Modelo\Usuario.class
 Interface\Utilidades.class
 Controlador\AdministradorController.class
+Interface\UIHome$4.class
 Interface\UIEditarRemoverEspacoFisico.class
 Modelo\AdministradorSerializable.class
 Modelo\EspacoFisicoSerializable.class
+Interface\UICalendarioReservasAdm.class
+Interface\UICalendarioReservas.class
 Interface\UIHome$2.class

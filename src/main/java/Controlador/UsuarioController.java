@@ -12,8 +12,8 @@ public class UsuarioController {
     private Usuario usuarioLogado; // Variável para armazenar o usuário logado
 
 
-    public Usuario registrarUsuario(String nome, String email, String telefone, String ra, String cpf, String senha) {
-        return serializable.registrarUsuario(nome, email, telefone, ra, cpf, senha);
+    public Usuario registrarUsuario(String nome, String telefone, String email, String ra, String cpf, String senha) {
+        return serializable.registrarUsuario(nome, telefone, email, ra, cpf, senha);
     }
 
     public Usuario atualizarUsuario(int usuarioID, String nome, String email, String telefone, String ra, String cpf, String senha) {

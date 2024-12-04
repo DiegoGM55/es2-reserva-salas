@@ -8,7 +8,11 @@ import java.time.ZonedDateTime;
 import java.time.Duration;
 import java.time.LocalTime;
 
-public class Reserva {
+import java.io.Serializable;
+
+public class Reserva implements Serializable {
+    private static final long serialVersionUID = 1L; // Controle de versão para serialização
+    
     private int id;
     private ZonedDateTime dataReservaInicio;
     private ZonedDateTime dataReservaFim;

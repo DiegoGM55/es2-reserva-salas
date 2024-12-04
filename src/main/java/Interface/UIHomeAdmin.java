@@ -31,7 +31,6 @@ public class UIHomeAdmin extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -41,22 +40,23 @@ public class UIHomeAdmin extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuUsuario = new javax.swing.JMenu(); // Novo menu Usuário
+        jMenuUsuario = new javax.swing.JMenu();
+        JMenu jMenuCalendario = new javax.swing.JMenu(); // Adicionado novo menu
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItemUsuarioCriar = new javax.swing.JMenuItem(); // Novo item para criar usuário
-        jMenuItemUsuarioEditar = new javax.swing.JMenuItem(); // Novo item para editar/remover usuário
+        jMenuItemUsuarioCriar = new javax.swing.JMenuItem();
+        jMenuItemUsuarioEditar = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
-        JMenuItem jMenuItemLogout = new javax.swing.JMenuItem(); // Inicializando o item de menu
+        JMenuItem jMenuItemLogout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Aguardando Aprovação");
 
         jButton1.setText("Filtrar");
-        jButton1.addActionListener(evt -> carregarReservasPendentes()); // Atualiza a tabela ao clicar
+        jButton1.addActionListener(evt -> carregarReservasAprovadas());
 
         jLabel2.setText("Próximas Reservas Confirmadas");
 
@@ -74,6 +74,7 @@ public class UIHomeAdmin extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
+        // Menu "Espaço Físico"
         jMenu1.setText("Espaço Físico");
 
         jMenuItem1.setText("Editar/Remover");
@@ -86,7 +87,7 @@ public class UIHomeAdmin extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        // Novo Menu "Usuário"
+        // Menu "Usuário"
         jMenuUsuario.setText("Usuário");
 
         jMenuItemUsuarioCriar.setText("Criar");
@@ -97,18 +98,25 @@ public class UIHomeAdmin extends javax.swing.JFrame {
         jMenuItemUsuarioEditar.addActionListener(evt -> abrirTelaEditarRemoverUsuario());
         jMenuUsuario.add(jMenuItemUsuarioEditar);
 
-        jMenuBar1.add(jMenuUsuario); // Adiciona o menu "Usuário" à barra de menus
+        jMenuBar1.add(jMenuUsuario);
 
-        jMenu2.add(jMenuItem4);
+        // Menu "Calendário"
+        jMenuCalendario.setText("Calendário"); // Define o texto do menu
 
-        jMenuBar1.add(jMenu2);
+        JMenuItem jMenuItemAbrirCalendario = new javax.swing.JMenuItem("Abrir Calendário");
+        jMenuItemAbrirCalendario.addActionListener(evt -> abrirCalendarioReservas()); // Define a ação ao clicar
+        jMenuCalendario.add(jMenuItemAbrirCalendario); // Adiciona o item ao menu "Calendário"
+
+        jMenuBar1.add(jMenuCalendario); // Adiciona o menu "Calendário" à barra de menus
+
+        // Adicionando Logout
+        jMenuItemLogout.setText("Logout");
+        jMenuItemLogout.addActionListener(evt -> realizarLogout());
+        jMenuBar1.add(jMenuItemLogout);
 
         setJMenuBar(jMenuBar1);
 
-        jMenuItemLogout.setText("Logout"); // Definindo o texto do item
-        jMenuItemLogout.addActionListener(evt -> realizarLogout()); // Definindo a ação ao clicar no item
-        jMenuBar1.add(jMenuItemLogout); // Adicionando o item de logout à barra de menus
-
+        // Layout
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -172,6 +180,12 @@ public class UIHomeAdmin extends javax.swing.JFrame {
     private void abrirTelaCriarEspacoFisico() {
         UICriarEspacoFisico novaTela = new UICriarEspacoFisico(espacoController);
         novaTela.setVisible(true);
+    }
+
+    // Método para abrir a nova interface
+    private void abrirCalendarioReservas() {
+        UICalendarioReservasAdm calendarioReservas = new UICalendarioReservasAdm(reservaController, userController);
+        calendarioReservas.setVisible(true);
     }
 
     private void abrirTelaEditarRemoverEspacoFisico() {
@@ -313,6 +327,11 @@ public class UIHomeAdmin extends javax.swing.JFrame {
                 fireEditingStopped();
                 abrirUIAprovaReserva();
             });
+        }
+
+        private void abrirCalendarioReservas() {
+            UICalendarioReservas calendarioReservas = new UICalendarioReservas(reservaController, userController);
+            calendarioReservas.setVisible(true);
         }
 
         private void abrirUIAprovaReserva() {

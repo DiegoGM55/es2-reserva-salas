@@ -1,18 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Modelo;
 
+import java.io.*;
 import java.util.ArrayList;
 
-public class EspacoFisicoSerializable {
+public class EspacoFisicoSerializable implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final ArrayList<EspacoFisico> espacosFisicos = new ArrayList<>();
-    private int nextId = 0; // Gerador de IDs
+    private int nextId = 1; // Gerador de IDs
+
+    private static final String FILE_PATH = "espacos_fisicos.dat";
+
+    public EspacoFisicoSerializable() {
+        carregarDados();
+    }
 
     public EspacoFisico registraEspacoFisico(String nome, String endereco, int capacidadeMaxima, String observacao) {
         EspacoFisico espaco = new EspacoFisico(nextId++, nome, endereco, capacidadeMaxima, observacao);
         espacosFisicos.add(espaco);
+        salvarDados();
         return espaco;
     }
 
@@ -23,14 +28,16 @@ public class EspacoFisicoSerializable {
                 espaco.setEndereco(endereco);
                 espaco.setCapacidadeMaxima(capacidadeMaxima);
                 espaco.setObservacao(observacao);
+                salvarDados();
                 return espaco;
             }
         }
-        return null; // Espaço físico não encontrado
+        return null;
     }
 
     public void excluiEspacoFisico(int id) {
         espacosFisicos.removeIf(espaco -> espaco.getId() == id);
+        salvarDados();
     }
 
     public EspacoFisico buscaEspacoFisico(String nome) {
@@ -39,21 +46,7 @@ public class EspacoFisicoSerializable {
                 return espaco;
             }
         }
-        return null; // Espaço físico não encontrado
-    }
-
-    public ArrayList<EspacoFisico> buscaEspacoFisicoPorCapacidade(int capacidadeMaxima) {
-        ArrayList<EspacoFisico> espacosEncontrados = new ArrayList<>();
-        for (EspacoFisico espaco : espacosFisicos) {
-            if (espaco.getCapacidadeMaxima() <= capacidadeMaxima) {
-                espacosEncontrados.add(espaco);
-            }
-        }
-        return espacosEncontrados;
-    }
-
-    public ArrayList<EspacoFisico> listaEspacosFisicos() {
-        return espacosFisicos;
+        return null;
     }
 
     public EspacoFisico buscaEspacoFisicoById(int id) {
@@ -62,6 +55,45 @@ public class EspacoFisicoSerializable {
                 return espaco;
             }
         }
-        return null; // Espaço físico não encontrado
+        return null;
+    }
+
+    public ArrayList<EspacoFisico> buscaEspacoFisicoPorCapacidade(int capacidadeMaxima) {
+        ArrayList<EspacoFisico> resultado = new ArrayList<>();
+        for (EspacoFisico espaco : espacosFisicos) {
+            if (espaco.getCapacidadeMaxima() >= capacidadeMaxima) {
+                resultado.add(espaco);
+            }
+        }
+        return resultado;
+    }
+
+    public ArrayList<EspacoFisico> listaEspacosFisicos() {
+        return new ArrayList<>(espacosFisicos);
+    }
+
+    // Métodos de persistência
+    private void salvarDados() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            oos.writeObject(espacosFisicos);
+            oos.writeInt(nextId);
+            System.out.println("Dados salvos");
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar dados de espaços físicos: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void carregarDados() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+            ArrayList<EspacoFisico> carregados = (ArrayList<EspacoFisico>) ois.readObject();
+            espacosFisicos.addAll(carregados);
+            nextId = ois.readInt();
+            System.out.println("Dados Carregados");
+        } catch (FileNotFoundException e) {
+            // Arquivo não existe ainda, será criado ao salvar
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Erro ao carregar dados de espaços físicos: " + e.getMessage());
+        }
     }
 }

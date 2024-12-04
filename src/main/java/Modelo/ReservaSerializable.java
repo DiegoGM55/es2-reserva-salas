@@ -1,26 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Modelo;
 
-import java.time.ZonedDateTime;
+import java.io.*;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
-public class ReservaSerializable {
+public class ReservaSerializable implements Serializable {
+    private static final long serialVersionUID = 1L; // Controle de versão para serialização
     private final ArrayList<Reserva> reservas = new ArrayList<>();
     private int nextId = 0; // Gerador de IDs
 
-    public Reserva registraReserva(ZonedDateTime dataReserva, Usuario usuario, EspacoFisico espacoFisico, LocalTime horarioInicio, Duration duracao, int status) {
+    private static final String FILE_PATH = "reservas.dat";
+
+    public ReservaSerializable() {
+        carregarDados();
+    }
+
+    public Reserva registraReserva(ZonedDateTime dataReserva, Usuario usuario, EspacoFisico espacoFisico,
+                                   LocalTime horarioInicio, Duration duracao, int status) {
         Reserva reserva = new Reserva(nextId++, dataReserva, usuario, espacoFisico, horarioInicio, duracao, status);
-        System.out.println("Reserva iniciada: " +  nextId + " nome local: " + espacoFisico.getNome());
+        System.out.println("Reserva iniciada: " + reserva.getId() + " nome local: " + espacoFisico.getNome());
         reservas.add(reserva);
+        salvarDados();
         return reserva;
     }
 
-    public Reserva atualizaReserva(int reservaID, ZonedDateTime dataReserva, Usuario usuario, EspacoFisico espacoFisico, LocalTime horarioInicio, Duration duracao, int status) {
+    public Reserva atualizaReserva(int reservaID, ZonedDateTime dataReserva, Usuario usuario, EspacoFisico espacoFisico,
+                                   LocalTime horarioInicio, Duration duracao, int status) {
         for (Reserva reserva : reservas) {
             if (reserva.getId() == reservaID) {
                 reserva.setDataReservaInicio(dataReserva);
@@ -29,6 +36,7 @@ public class ReservaSerializable {
                 reserva.setHorarioInicio(horarioInicio);
                 reserva.setDuracao(duracao);
                 reserva.setStatus(status);
+                salvarDados();
                 return reserva;
             }
         }
@@ -36,8 +44,9 @@ public class ReservaSerializable {
     }
 
     public void deleteReserva(int reservaID) {
-        reservas.removeIf(reserva -> reserva.getId() == reservaID);
-        System.out.println("reservas:" + reservas);
+        if (reservas.removeIf(reserva -> reserva.getId() == reservaID)) {
+            salvarDados(); // Salva as mudanças após remover
+        }
     }
 
     public Reserva buscarReservaPorID(int reservaID) {
@@ -49,16 +58,16 @@ public class ReservaSerializable {
         return null; // Reserva não encontrada
     }
 
-    public ArrayList<Reserva> buscarReservasPorEspaco(EspacoFisico espaçoFisico) {
+    public ArrayList<Reserva> buscarReservasPorEspaco(EspacoFisico espacoFisico) {
         ArrayList<Reserva> reservasPorEspaco = new ArrayList<>();
         for (Reserva reserva : reservas) {
-            if (reserva.getEspacoFisico().equals(espaçoFisico)) {
+            if (reserva.getEspacoFisico().equals(espacoFisico)) {
                 reservasPorEspaco.add(reserva);
             }
         }
-        return reservasPorEspaco; // Reserva não encontrada
+        return reservasPorEspaco;
     }
-    
+
     public ArrayList<Reserva> getReservasPendentes() {
         ArrayList<Reserva> pendentes = new ArrayList<>();
         for (Reserva reserva : reservas) {
@@ -117,5 +126,28 @@ public class ReservaSerializable {
             }
         }
         return recusadas;
+    }
+
+    // Métodos de persistência
+    private void salvarDados() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            oos.writeObject(reservas);
+            oos.writeInt(nextId);
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar dados de reservas: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void carregarDados() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+            ArrayList<Reserva> carregadas = (ArrayList<Reserva>) ois.readObject();
+            reservas.addAll(carregadas);
+            nextId = ois.readInt();
+        } catch (FileNotFoundException e) {
+            // Arquivo ainda não existe; será criado ao salvar
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Erro ao carregar dados de reservas: " + e.getMessage());
+        }
     }
 }
